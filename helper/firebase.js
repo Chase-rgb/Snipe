@@ -29,6 +29,7 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 		targetIDs.forEach((targetUser) => {
 			batch.set(guildRef, {[sniperID]: {[targetUser]: FieldValue.increment(1)}}, {merge: true})
 		})
+		batch.set(guildRef, {"--playerStats--": {[sniperID]: FieldValue.increment(targetIDs.length)}}, {merge: true})
 		let testVal = await batch.commit().then(console.log("Database successful updated"));
 		return true
 
@@ -39,10 +40,16 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 	}
 }
 
+async function getGuildData(guildID) {
+
+}
+
 
 // addSnipe("973383546825740298", "sniper3", "testTarget2")
 
 module.exports = {
 	db,
-	addSnipe
+	addSnipe, 
+	getGuildData,
+	// getUserData
 }
