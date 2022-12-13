@@ -18,7 +18,10 @@ execute = async(interaction) => {
     let targetID = interaction.options.getUser('target1');
     let image = interaction.options.getAttachment("image")
 
-    // console.log(image);
+
+    // console.log(sniperID);
+    // console.log(targetID);
+    // console.log(guildID);
 
     // const message = await interaction.reply(
     //     content: ""
