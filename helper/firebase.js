@@ -29,11 +29,13 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 		targetIDs.forEach((targetUser) => {
 			batch.set(guildRef, {[sniperID]: {[targetUser]: FieldValue.increment(1)}}, {merge: true})
 		})
-		await batch.commit().then(console.log("Database successful updated"));
+		let testVal = await batch.commit().then(console.log("Database successful updated"));
+		return true
 
 		// console.log(await (await guildRef.get()).data()[sniperID]);
 	} catch (error) {
 		console.log("Error in adding snipe to database", error);
+		return false
 	}
 }
 

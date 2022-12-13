@@ -17,18 +17,9 @@ execute = async(interaction) => {
     let targetID = interaction.options.getUser('target1');
     let image = interaction.options.getAttachment("image")
 
-    
     // console.log(sniperID);
     // console.log(targetID);
     // console.log(guildID);
-
-    // const message = await interaction.reply(
-    //     content: ""
-    // )
-
-    // addSnipe(guildID, sniperID, targetID)
-
-    // console.log(sniperUser);
 
     const message = await interaction.reply({
         content: `${targetID} just got sniped by ${sniperID}`,

@@ -17,7 +17,7 @@ function snipeOnReact(message, sniperId, ...targets) {
         console.log(`Collected ${user.tag}`);
     })
 
-    collector.on("end", (collected) => {
+    collector.on("end", async (collected) => {
         snipedUsers = collected.get('🟩')
         //Makes sure that a target has reacted
         snipedUsers = snipedUsers == undefined ? [] : Array.from(collected.get('🟩')?.users.cache.values()).filter(user => targets.includes(user))
@@ -36,7 +36,8 @@ function snipeOnReact(message, sniperId, ...targets) {
             message.reply({content: "No successful snipes this time ;-;"})
         //If there are successful snipes, update database
         } else {
-            addSnipe(message.guildId, sniperId, successfulSnipedUsers)
+            let val = addSnipe(message.guildId, sniperId, successfulSnipedUsers)
+            console.log(await val);
         }
     })
 

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { addSnipe } = require('../helper/firebase')
 const { snipeOnReact } = require('../helper/snipeOnReact.js')
+const { buildTargetString } = require('../helper/stringHelper.js')
 const numTargets = 5
 
 const data = new SlashCommandBuilder()
@@ -17,16 +18,16 @@ for (let i = 1; i < numTargets; i++){
 }
 
 execute = async(interaction) => {
-    let guildID = interaction.guildId
     let sniperID = interaction.user
     let targetID = []
     let image = interaction.options.getAttachment("image")
 
     try {
         for (let i = 0; i < numTargets; i++) {
-            const user = interaction.options.getUser('target' + i);
+            const user = interaction.options.getUser(`target${i+1}`);
             if (user) {
                 targetID.push(user)
+                console.log(user.id);
             }
         }  
     } catch (error) {
@@ -43,21 +44,4 @@ execute = async(interaction) => {
     snipeOnReact(message, sniperID, ...targetID)
 }
 
-
-function buildTargetString(targets) {
-    console.log(targets);
-    if (targets.length == 1) {
-        return `${targets[0]}`
-    } else if (targets.length == 2) {
-        return `${targets[0]} and ${targets[1]}`
-    } else {
-        let currString = ""
-        for (let i = 0; i < targets.length - 1; i++){
-            currString += `${targets[i]}, `
-        }
-        currString += `and ${targets[targets.length - 1]}`
-        return currString
-    }
-
-}
 module.exports = {data, execute}
