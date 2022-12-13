@@ -32,9 +32,6 @@ execute = async(interaction) => {
     } catch (error) {
         console.log(error)
     }
-    // const user = interaction.options.getUser('target1');
-    // console.log(user)
-
 
     const message = await interaction.reply({
         content: `${buildTargetString(targetID)} just got sniped by ${sniperID}`,

@@ -1,3 +1,5 @@
+const { addSnipe } = require('../helper/firebase')
+
 function snipeOnReact(message, sniperId, ...targets) {
     message.react('🟩')
     message.react('🟥')
@@ -27,10 +29,17 @@ function snipeOnReact(message, sniperId, ...targets) {
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
         console.log(successfulSnipedUsers);
-        // message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
+        message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
+
+        //Check to see if there were any successful snipes
+        if (successfulSnipedUsers.length == 0) {
+            message.reply({content: "No successful snipes this time ;-;"})
+        //If there are successful snipes, update database
+        } else {
+            addSnipe(message.guildId, sniperId, successfulSnipedUsers)
+        }
     })
 
-    
 
 }
 

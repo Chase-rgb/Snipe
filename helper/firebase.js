@@ -22,15 +22,21 @@ async function testDB() {
 }
 // testDB()
 
-async function addSnipe(guildID, sniperID, targetID) {
+async function addSnipe(guildID, sniperID, targetIDs) {
 	try {
+		const batch = db.batch()
 		const guildRef = db.collection("guilds").doc(guildID);
-		await guildRef.set({[sniperID]: {[targetID]: FieldValue.increment(1)}}, {merge: true})
+		targetIDs.forEach((targetUser) => {
+			batch.set(guildRef, {[sniperID]: {[targetUser]: FieldValue.increment(1)}}, {merge: true})
+		})
+		await batch.commit().then(console.log("Database successful updated"));
+
 		// console.log(await (await guildRef.get()).data()[sniperID]);
 	} catch (error) {
 		console.log("Error in adding snipe to database", error);
 	}
 }
+
 
 // addSnipe("973383546825740298", "sniper3", "testTarget2")
 

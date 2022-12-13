@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { addSnipe } = require('../helper/firebase')
 const { snipeOnReact } = require('../helper/snipeOnReact.js')
 
 const data = new SlashCommandBuilder()
@@ -18,7 +17,7 @@ execute = async(interaction) => {
     let targetID = interaction.options.getUser('target1');
     let image = interaction.options.getAttachment("image")
 
-
+    
     // console.log(sniperID);
     // console.log(targetID);
     // console.log(guildID);
@@ -35,7 +34,6 @@ execute = async(interaction) => {
         content: `${targetID} just got sniped by ${sniperID}`,
         files: [image],
         fetchReply: true
-        
     });
     snipeOnReact(message, sniperID, targetID)
 }
