@@ -11,11 +11,10 @@ const db = getFirestore();
 
 async function testDB() {
 	try {
-		const snapshot = await db.collection('guilds').get();
+		// const snapshot = await db.collection('guilds').get();
+		const sniperHitlistRef = await db.collection("guilds").doc("973383546825740298").collection("sniperKillList").doc("sniperId").get()
 		// console.log(snapshot);
-		snapshot.forEach((doc) => {
-			console.log(doc);
-		});
+		console.log(sniperHitlistRef);
 	} catch (error) {
 		console.log("Error in getting database guilds", error)
 	}
@@ -25,9 +24,14 @@ async function testDB() {
 async function addSnipe(guildID, sniperID, targetIDs) {
 	try {
 		const batch = db.batch()
-		const guildRef = db.collection("guilds").doc(guildID);
+		console.log("after batch");
+		const guildRef = db.collection("guilds").doc(guildID)
+		console.log("after guild ref");
+		const sniperHitlistRef = db.collection("guilds").doc(guildID).collection("sniperKillList").doc(sniperID.id);
+		console.log("after sniper ref");
 		targetIDs.forEach((targetUser) => {
-			batch.set(guildRef, {[sniperID]: {[targetUser]: FieldValue.increment(1)}}, {merge: true})
+			console.log("adding targetID");
+			batch.set(sniperHitlistRef, {[targetUser]: FieldValue.increment(1)}, {merge: true})
 		})
 		batch.set(guildRef, {"--playerStats--": {[sniperID]: FieldValue.increment(targetIDs.length)}}, {merge: true})
 		await batch.commit().then(console.log("Database successful updated"));
@@ -41,7 +45,8 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 }
 
 async function getGuildData(guildID) {
-
+	const guildRef = db.collection("guilds").doc(guildID);
+	const guildData = await guildRef.get()
 }
 
 
@@ -53,3 +58,5 @@ module.exports = {
 	getGuildData,
 	// getUserData
 }
+
+// testDB()

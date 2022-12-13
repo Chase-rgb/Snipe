@@ -14,6 +14,7 @@ function buildTargetString(targets) {
 }
 
 function buildTargetUserString(targets) {
+    console.log(targets);
     if (targets.length == 1) {
         return `${targets[0].username}`
     } else if (targets.length == 2) {

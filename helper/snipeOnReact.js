@@ -22,11 +22,11 @@ function snipeOnReact(message, sniperId, ...targets) {
         snipedUsers = collected.get('🟩')
         //Makes sure that a target has reacted
         snipedUsers = snipedUsers == undefined ? [] : Array.from(collected.get('🟩')?.users.cache.values()).filter(user => targets.includes(user))
-        console.log(snipedUsers);
+        // console.log(snipedUsers);
 
         missedUsers = collected.get('🟥')
         missedUsers = missedUsers == undefined ? [] : Array.from(collected.get('🟥')?.users.cache.values()).filter(user => targets.includes(user))
-        console.log(missedUsers);
+        // console.log(missedUsers);
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
         console.log(successfulSnipedUsers);
@@ -38,9 +38,17 @@ function snipeOnReact(message, sniperId, ...targets) {
             return
         //If there are successful snipes, update database
         }
-        if (!addSnipe(message.guildId, sniperId, successfulSnipedUsers)) {
+        if (await !addSnipe(message.guildId, sniperId, successfulSnipedUsers)) {
             message.reply({content: "Error in updating database"})
             return
+        }
+
+        let responseMessage = ""
+        if (successfulSnipedUsers.length > 0) {
+            responseMessage += `${buildTargetUserString(successfulSnipedUsers)} successfully sniped!`
+        }
+        if (missedUsers.length > 0) {
+            responseMessage += `\n${buildTargetUserString(missedUsers)} successfully got away!`
         }
         message.reply({content: `${buildTargetUserString(successfulSnipedUsers)} successfully sniped! \n${buildTargetUserString(missedUsers)} successfully got away!`})
     })
