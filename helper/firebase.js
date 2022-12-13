@@ -30,7 +30,7 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 			batch.set(guildRef, {[sniperID]: {[targetUser]: FieldValue.increment(1)}}, {merge: true})
 		})
 		batch.set(guildRef, {"--playerStats--": {[sniperID]: FieldValue.increment(targetIDs.length)}}, {merge: true})
-		let testVal = await batch.commit().then(console.log("Database successful updated"));
+		await batch.commit().then(console.log("Database successful updated"));
 		return true
 
 		// console.log(await (await guildRef.get()).data()[sniperID]);

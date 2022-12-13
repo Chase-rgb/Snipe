@@ -1,4 +1,5 @@
 const { addSnipe } = require('../helper/firebase')
+const { buildTargetUserString } = require('../helper/stringHelper.js')
 
 function snipeOnReact(message, sniperId, ...targets) {
     message.react('🟩')
@@ -34,11 +35,14 @@ function snipeOnReact(message, sniperId, ...targets) {
         //Check to see if there were any successful snipes
         if (successfulSnipedUsers.length == 0) {
             message.reply({content: "No successful snipes this time ;-;"})
+            return
         //If there are successful snipes, update database
-        } else {
-            let val = addSnipe(message.guildId, sniperId, successfulSnipedUsers)
-            console.log(await val);
         }
+        if (!addSnipe(message.guildId, sniperId, successfulSnipedUsers)) {
+            message.reply({content: "Error in updating database"})
+            return
+        }
+        message.reply({content: `${buildTargetUserString(successfulSnipedUsers)} successfully sniped! \n${buildTargetUserString(missedUsers)} successfully got away!`})
     })
 
 
