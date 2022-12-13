@@ -4,6 +4,7 @@ const numTargets = 5
 const data = new SlashCommandBuilder()
 	.setName('snipe_multiple')
 	.setDescription("Enter list of people being snipe (don't need to select all options)!")
+    .addAttachmentOption(option => option.setName('image').setDescription("Snipe image"))
     .addUserOption(option => option.setName('target1').setDescription("Target"))
     .addUserOption(option => option.setName('target2').setDescription("Target"))
     .addUserOption(option => option.setName('target3').setDescription("Target"))
@@ -26,8 +27,6 @@ execute = async(interaction) => {
     } catch (error) {
         console.log(error)
     }
-    
-    console.log(users)
     // const user = interaction.options.getUser('target1');
     // console.log(user)
 
