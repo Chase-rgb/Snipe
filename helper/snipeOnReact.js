@@ -9,22 +9,24 @@ function snipeOnReact(message, sniperId, ...targets) {
     }
 
     //Set up collector to expire in 1 day
-    const collector = message.createReactionCollector({ filter, time: 1000 * 10, dispose: true, maxUsers: 2})
+    const collector = message.createReactionCollector({ filter, time: 1000 * 5, dispose: true, maxUsers: 2})
 
     collector.on("collect", (reaction, user) => {
         console.log(`Collected ${user.tag}`);
     })
 
     collector.on("end", (collected) => {
-        snipedUsers = Array.from(collected.get('🟩').users.cache.values())
-        snipedUsers = snipedUsers.filter(user => targets.includes(user))
+        snipedUsers = collected.get('🟩')
+        //Makes sure that a target has reacted
+        snipedUsers = snipedUsers == undefined ? [] : Array.from(collected.get('🟩')?.users.cache.values()).filter(user => targets.includes(user))
         console.log(snipedUsers);
 
-        missedUsers = Array.from(collected.get('🟥').users.cache.values())
-        missedUsers = missedUsers.filter(user => targets.includes(user))
+        missedUsers = collected.get('🟥')
+        missedUsers = missedUsers == undefined ? [] : Array.from(collected.get('🟥')?.users.cache.values()).filter(user => targets.includes(user))
         console.log(missedUsers);
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
+        console.log(successfulSnipedUsers);
         // message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
     })
 
