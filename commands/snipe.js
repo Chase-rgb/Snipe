@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { addSnipe } = require('../helper/firebase')
 
 const data = new SlashCommandBuilder()
 	.setName('snipe')
@@ -13,10 +14,13 @@ const data = new SlashCommandBuilder()
 execute = async(interaction) => {
     let sniperUser = interaction.user
     let targetUser = interaction.options.getUser('target1');
+    console.log(interaction);
 
-    console.log(sniperUser);
+    addSnipe(interaction.guildId, sniperUser, targetUser)
 
-    await interaction.reply('Pong!');
+    // console.log(sniperUser);
+
+    await interaction.reply('Sniped!');
 }
 
 module.exports = {data, execute}
