@@ -27,7 +27,6 @@ execute = async(interaction) => {
             const user = interaction.options.getUser(`target${i+1}`);
             if (user) {
                 targetID.push(user)
-                console.log(user.id);
             }
         }  
     } catch (error) {

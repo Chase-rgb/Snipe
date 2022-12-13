@@ -1,5 +1,4 @@
 function buildTargetString(targets) {
-    console.log(targets);
     if (targets.length == 1) {
         return `${targets[0]}`
     } else if (targets.length == 2) {

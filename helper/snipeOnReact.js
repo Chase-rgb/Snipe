@@ -11,7 +11,7 @@ function snipeOnReact(message, sniperId, ...targets) {
     }
 
     //Set up collector to expire in 1 day
-    const collector = message.createReactionCollector({ filter, time: 1000 * 5, dispose: true, maxUsers: 2})
+    const collector = message.createReactionCollector({ filter, time: 1000 * 86400, dispose: true, maxUsers: targets.length})
 
     collector.on("collect", (reaction, user) => {
         console.log(`Collected ${user.tag}`);
