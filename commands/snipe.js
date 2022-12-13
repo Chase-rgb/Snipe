@@ -12,15 +12,25 @@ const data = new SlashCommandBuilder()
     //         .setRequired(true));
 
 execute = async(interaction) => {
-    let sniperUser = interaction.user
-    let targetUser = interaction.options.getUser('target1');
-    console.log(interaction);
+    let guildID = interaction.guildId
+    let sniperID = interaction.user
+    let targetID = interaction.options.getUser('target1');
+    let image = interaction.options.getAttachment("image")
 
-    addSnipe(interaction.guildId, sniperUser, targetUser)
+    console.log(image);
+
+    // const message = await interaction.reply(
+    //     content: ""
+    // )
+
+    // addSnipe(guildID, sniperID, targetID)
 
     // console.log(sniperUser);
 
-    await interaction.reply('Sniped!');
+    await interaction.reply({
+        content: 'Sniped!',
+        files: [image]
+    });
 }
 
 module.exports = {data, execute}
