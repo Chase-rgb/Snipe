@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { addSnipe } = require('../helper/firebase')
+const { snipeOnReact } = require('../helper/snipeOnReact.js')
 
 const data = new SlashCommandBuilder()
 	.setName('snipe')
@@ -17,7 +18,7 @@ execute = async(interaction) => {
     let targetID = interaction.options.getUser('target1');
     let image = interaction.options.getAttachment("image")
 
-    console.log(image);
+    // console.log(image);
 
     // const message = await interaction.reply(
     //     content: ""
@@ -27,10 +28,13 @@ execute = async(interaction) => {
 
     // console.log(sniperUser);
 
-    await interaction.reply({
-        content: 'Sniped!',
-        files: [image]
+    const message = await interaction.reply({
+        content: `${targetID} just got sniped by ${sniperID}`,
+        files: [image],
+        fetchReply: true
+        
     });
+    snipeOnReact(message, sniperID, targetID)
 }
 
 module.exports = {data, execute}
