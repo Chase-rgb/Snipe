@@ -8,14 +8,13 @@ const data = new SlashCommandBuilder()
 	.setDescription("Enter list of people being snipe (don't need to select all options)!")
     .addAttachmentOption(option => option.setName('image').setDescription("Snipe image").setRequired(true))
     .addUserOption(option => option.setName('target1').setDescription("Target").setRequired(true))
-    .addUserOption(option => option.setName('target2').setDescription("Target"))
-    .addUserOption(option => option.setName('target3').setDescription("Target"))
-    .addUserOption(option => option.setName('target4').setDescription("Target"))
-    .addUserOption(option => option.setName('target5').setDescription("Target"));
-	// .addUserOption(option =>
-	// 	option.setName('user')
-	// 		.setDescription('Get Sniped User')
-    //         .setRequired(true));
+    // .addUserOption(option => option.setName('target2').setDescription("Target"))
+    // .addUserOption(option => option.setName('target3').setDescription("Target"))
+    // .addUserOption(option => option.setName('target4').setDescription("Target"))
+    // .addUserOption(option => option.setName('target5').setDescription("Target"));
+for (let i = 1; i < numTargets; i++){ 
+    data.addUserOption(option => option.setName(`target${i+1}`).setDescription("Target"))
+}
 
 execute = async(interaction) => {
     let guildID = interaction.guildId
@@ -55,11 +54,11 @@ function buildTargetString(targets) {
     } else if (targets.length == 2) {
         return `${targets[0]} and ${targets[1]}`
     } else {
+        let currString = ""
         for (let i = 0; i < targets.length - 1; i++){
-            let currString = ""
-            currString += `${target[i]}, `
+            currString += `${targets[i]}, `
         }
-        currString += `and ${target[targets.length - 1]}`
+        currString += `and ${targets[targets.length - 1]}`
         return currString
     }
 
