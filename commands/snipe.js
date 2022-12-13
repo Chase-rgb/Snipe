@@ -3,28 +3,18 @@ const { SlashCommandBuilder } = require('discord.js');
 const data = new SlashCommandBuilder()
 	.setName('snipe')
 	.setDescription("Enter person being sniped")
-    .addUserOption(option => option.setName('target1').setDescription("Target"));
+    .addAttachmentOption(option => option.setName('image').setDescription("Snipe image").setRequired(true))
+    .addUserOption(option => option.setName('target1').setDescription("Target").setRequired(true));
 	// .addUserOption(option =>
 	// 	option.setName('user')
 	// 		.setDescription('Get Sniped User')
     //         .setRequired(true));
 
 execute = async(interaction) => {
-    let users = []
-    try {
-        for (let i = 0; i < numTargets; i++) {
-            const user = interaction.options.getUser('target' + i);
-            if (user) {
-                users.push(user)
-            }
-        }  
-    } catch (error) {
-        console.log(error)
-    }
-    
-    console.log(users)
-    // const user = interaction.options.getUser('target1');
-    // console.log(user)
+    let sniperUser = interaction.user
+    let targetUser = interaction.options.getUser('target1');
+
+    console.log(sniperUser);
 
     await interaction.reply('Pong!');
 }

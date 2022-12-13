@@ -1,21 +1,27 @@
-// Import the functions you need from the SDKs you need
-const { initializeApp } = "firebase/app";
-const { getFirestore, addDoc, collection } = "firebase/firestore"
-require('dotenv').config()
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: process.env.apiKey,
-  authDomain: "snipe-58633.firebaseapp.com",
-  projectId: "snipe-58633",
-  storageBucket: "snipe-58633.appspot.com",
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId
-};
+const serviceAccount = require('../ServiceAccountKey.json');
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp({
+	credential: cert(serviceAccount)
+});
 
-module.exports.database = getFirestore(app)
+const db = getFirestore();
+
+async function testDB() {
+	try {
+		const snapshot = await db.collection('guilds').get();
+		// console.log(snapshot);
+		snapshot.forEach((doc) => {
+			console.log(doc);
+		});
+	} catch (error) {
+		console.log("Error in getting database guilds", error)
+	}
+}
+testDB()
+
+
+
+module.exports.db = db
