@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { addSnipe } = require('../helper/firebase')
 const { snipeOnReact } = require('../helper/snipeOnReact.js')
 const { buildTargetString } = require('../helper/stringHelper.js')
 const numTargets = 5

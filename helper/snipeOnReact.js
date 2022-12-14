@@ -29,7 +29,7 @@ function snipeOnReact(message, sniperId, ...targets) {
         // console.log(missedUsers);
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
-        console.log(successfulSnipedUsers);
+        // console.log(successfulSnipedUsers);
         message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
 
         //Check to see if there were any successful snipes

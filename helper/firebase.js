@@ -68,7 +68,7 @@ async function getGuildSniperData(guildID) {
 		sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("totalSnipes")}*** \n`
 		i++
 	})
-	console.log(sniperDataString)
+	// console.log(sniperDataString)
 	return sniperDataString
 }
 
@@ -82,7 +82,7 @@ async function getGuildHuntedData(guildID) {
 		huntedDataString += `${i}) ${doc.get("username")} => ***${doc.get("timesHunted")}*** \n`
 		i++
 	})
-	console.log(huntedDataString)
+	// console.log(huntedDataString)
 	return huntedDataString
 }
 
@@ -100,7 +100,7 @@ async function getSniperData(guildID, sniperID) {
 			sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("timeHunted")}*** \n`
 			i++
 		})
-		console.log(sniperDataString)
+		// console.log(sniperDataString)
 		return sniperDataString
 	}
 }
