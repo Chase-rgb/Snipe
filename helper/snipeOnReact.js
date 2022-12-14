@@ -50,7 +50,7 @@ function snipeOnReact(message, sniperId, ...targets) {
         if (missedUsers.length > 0) {
             responseMessage += `\n${buildTargetUserString(missedUsers)} successfully got away!`
         }
-        message.reply({content: `${buildTargetUserString(successfulSnipedUsers)} successfully sniped! \n${buildTargetUserString(missedUsers)} successfully got away!`})
+        message.reply({content: `${responseMessage}`})
     })
 
 

@@ -13,8 +13,6 @@ async function testDB() {
 	try {
 		// const snapshot = await db.collection('guilds').get();
 		const sniperHitlistRef = await db.collection("guilds").doc("973383546825740298").collection("sniperKillList").doc("sniperId").get()
-		// console.log(snapshot);
-		console.log(sniperHitlistRef);
 	} catch (error) {
 		console.log("Error in getting database guilds", error)
 	}
@@ -24,16 +22,30 @@ async function testDB() {
 async function addSnipe(guildID, sniperID, targetIDs) {
 	try {
 		const batch = db.batch()
-		console.log("after batch");
+
 		const guildRef = db.collection("guilds").doc(guildID)
-		console.log("after guild ref");
-		const sniperHitlistRef = db.collection("guilds").doc(guildID).collection("sniperKillList").doc(sniperID.id);
-		console.log("after sniper ref");
+		const sniperInfoRef = guildRef.collection("sniperInfo").doc(sniperID.id)
+		const sniperSnipedListRef = sniperInfoRef.collection("snipedList")
 		targetIDs.forEach((targetUser) => {
-			console.log("adding targetID");
-			batch.set(sniperHitlistRef, {[targetUser]: FieldValue.increment(1)}, {merge: true})
+			const huntedRef = guildRef.collection("huntedInfo").doc(targetUser.id)
+			const sniperHuntedRef = sniperSnipedListRef.doc(targetUser.id)
+
+			//Increment hunted document
+			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1)}, {merge: true})
+
+			//Increment total sniped count
+			batch.set(sniperInfoRef, {"totalSnipes": FieldValue.increment(1)}, {merge: true})
+
+			//Add sniper name to the database
+			batch.set(sniperInfoRef, {"username": sniperID.username}, {merge: true})
+
+			//Increment hunted death count
+			batch.set(huntedRef, {"timesHunted": FieldValue.increment(1)}, {merge: true})
+
+			//Add hunted name to the database
+			batch.set(huntedRef, {"username": targetUser.username}, {merge: true})
+			
 		})
-		batch.set(guildRef, {"--playerStats--": {[sniperID]: FieldValue.increment(targetIDs.length)}}, {merge: true})
 		await batch.commit().then(console.log("Database successful updated"));
 		return true
 
@@ -44,9 +56,10 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 	}
 }
 
-async function getGuildData(guildID) {
-	const guildRef = db.collection("guilds").doc(guildID);
-	const guildData = await guildRef.get()
+async function getGuildSniperData(guildID) {
+	const sniperInforef = db.collection("guilds").doc(guildID).collection("sniperInfo");
+	const guildData = await guildRef.orderBy("totalSnipes")
+	console.log(guildData);
 }
 
 
@@ -55,8 +68,8 @@ async function getGuildData(guildID) {
 module.exports = {
 	db,
 	addSnipe, 
-	getGuildData,
+	getGuildSniperData,
 	// getUserData
 }
 
-// testDB()
+// getGuildData("973383546825740298")
