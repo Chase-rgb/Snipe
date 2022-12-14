@@ -1,5 +1,6 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const client = require('firebase-tools');
 
 const serviceAccount = require('../ServiceAccountKey.json');
 
@@ -69,7 +70,7 @@ async function getGuildSniperData(guildID) {
 		i++
 	})
 	// console.log(sniperDataString)
-	return sniperDataString
+	return sniperDataString.length == 0 ? "No sniper data available" : sniperDataString
 }
 
 
@@ -83,7 +84,7 @@ async function getGuildHuntedData(guildID) {
 		i++
 	})
 	// console.log(huntedDataString)
-	return huntedDataString
+	return huntedDataString.length == 0 ? "No hunted data available" : huntedDataString
 }
 
 async function getSniperData(guildID, sniperID) {
@@ -102,8 +103,19 @@ async function getSniperData(guildID, sniperID) {
 			i++
 		})
 		// console.log(sniperDataString)
-		return sniperDataString
+		return sniperDataString.length == 0 ? "No sniper data available" : sniperDataString
 	}
+}
+
+
+async function deleteServerSnipeData(guildID) {
+	let collectionPath = `/guilds/${guildID}`
+	await client.firestore.delete(collectionPath, {
+		project: process.env.GCLOUD_PROJECT,
+		recursive: true,
+		yes: true,
+		force: true
+	})
 }
 
 
@@ -114,7 +126,8 @@ module.exports = {
 	addSnipe, 
 	getGuildSniperData,
 	getGuildHuntedData,
-	getSniperData
+	getSniperData,
+	deleteServerSnipeData
 }
 
 // getSniperData("973383546825740298", {id: "280538761710796800"})

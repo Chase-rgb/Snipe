@@ -10,7 +10,7 @@ const data = new SlashCommandBuilder()
 
 async function execute(interaction) {
     let guildID = interaction.guildId
-
+    
     const embedMessage = new EmbedBuilder()
         .setTitle(`Server Leaderboard`)
         .setThumbnail(`https://cdn-icons-png.flaticon.com/512/473/473409.png`)
