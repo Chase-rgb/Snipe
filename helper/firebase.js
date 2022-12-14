@@ -57,9 +57,17 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 }
 
 async function getGuildSniperData(guildID) {
-	const sniperInforef = db.collection("guilds").doc(guildID).collection("sniperInfo");
-	const guildData = await guildRef.orderBy("totalSnipes")
-	console.log(guildData);
+	const sniperInfo = db.collection("guilds").doc(guildID).collection("sniperInfo");
+	const snapshot = await sniperInfo.orderBy("totalSnipes", "desc").orderBy("username").get()
+	sniperDataString = ""
+	console.log(typeof snapshot);
+	let i = 1
+	snapshot.forEach(async (doc) => {
+		sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("totalSnipes")}*** \n`
+		i++
+	})
+	console.log(sniperDataString)
+	return sniperDataString
 }
 
 
@@ -72,4 +80,4 @@ module.exports = {
 	// getUserData
 }
 
-// getGuildData("973383546825740298")
+// getGuildSniperData("973383546825740298") 

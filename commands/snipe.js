@@ -12,7 +12,6 @@ const data = new SlashCommandBuilder()
     //         .setRequired(true));
 
 execute = async(interaction) => {
-    let guildID = interaction.guildId
     let sniperID = interaction.user
     let targetID = interaction.options.getUser('target1');
     let image = interaction.options.getAttachment("image")
