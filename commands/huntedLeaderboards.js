@@ -11,7 +11,7 @@ async function execute(interaction) {
     let guildID = interaction.guildId
 
     const embedMessage = new EmbedBuilder()
-        .setTitle(`Sever Leaderboard`)
+        .setTitle(`Hunted Leaderboard`)
         .setThumbnail(`https://cdn-icons-png.flaticon.com/512/473/473409.png`)
         .setColor(0xa30000)
         .setTimestamp()
