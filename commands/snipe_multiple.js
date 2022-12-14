@@ -5,7 +5,7 @@ const { buildTargetString } = require('../helper/stringHelper.js')
 const numTargets = 5
 
 const data = new SlashCommandBuilder()
-	.setName('snipe_multiple')
+	.setName('snipe')
 	.setDescription("Enter list of people being snipe (don't need to select all options)!")
     .addAttachmentOption(option => option.setName('image').setDescription("Snipe image").setRequired(true))
     .addUserOption(option => option.setName('target1').setDescription("Target").setRequired(true))
@@ -25,19 +25,28 @@ execute = async(interaction) => {
     try {
         for (let i = 0; i < numTargets; i++) {
             const user = interaction.options.getUser(`target${i+1}`);
-            if (user) {
-                targetID.push(user)
+            // console.log(user);
+            if (user == undefined) {continue}
+
+            // Don't allow the snipe bot to be sniped
+            if (user.id == "1051605729531924590") {
+                interaction.reply({content: "Unfortunately, you can't snipe the bot ;-;", ephemeral: true})
+                return 
             }
+            if (user.id == sniperID.id) {
+                interaction.reply({content: "Sniping yourself sounds like a bad time ;-;", ephemeral: true})
+                return
+            }
+            targetID.push(user)
         }  
     } catch (error) {
         console.log(error)
     }
-
+    targetID = [...new Set(targetID)];
     const message = await interaction.reply({
         content: `${buildTargetString(targetID)} just got sniped by ${sniperID}`,
         files: [image],
         fetchReply: true
-        
     });
 
     snipeOnReact(message, sniperID, ...targetID)

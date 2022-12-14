@@ -45,7 +45,7 @@ function snipeOnReact(message, sniperId, ...targets) {
 
         let responseMessage = ""
         if (successfulSnipedUsers.length > 0) {
-            responseMessage += `${buildTargetUserString(successfulSnipedUsers)} successfully sniped!`
+            responseMessage += `Snipe confirmed on ${buildTargetUserString(successfulSnipedUsers)}!`
         }
         if (missedUsers.length > 0) {
             responseMessage += `\n${buildTargetUserString(missedUsers)} successfully got away!`

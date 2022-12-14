@@ -33,6 +33,9 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 			//Increment hunted document
 			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1)}, {merge: true})
 
+			//Add hunted name to sniper document
+			batch.set(sniperHuntedRef, {"username": targetUser.username}, {merge: true})
+
 			//Increment total sniped count
 			batch.set(sniperInfoRef, {"totalSnipes": FieldValue.increment(1)}, {merge: true})
 
@@ -83,6 +86,25 @@ async function getGuildHuntedData(guildID) {
 	return huntedDataString
 }
 
+async function getSniperData(guildID, sniperID) {
+	const sniperInfoRef = db.collection("guilds").doc(guildID).collection("sniperInfo").doc(sniperID.id);
+	const doc = await sniperInfoRef.get()
+	if (!doc.exists) {
+		return ""
+	} else {
+		const sniperHitlistRef = sniperInfoRef.collection("snipedList")
+		const snapshot = await sniperHitlistRef.orderBy("timesHunted", "desc").orderBy("username").get()
+		sniperDataString = ""
+		let i = 1
+		snapshot.forEach(async (doc) => {
+			sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("timeHunted")}*** \n`
+			i++
+		})
+		console.log(sniperDataString)
+		return sniperDataString
+	}
+}
+
 
 // addSnipe("973383546825740298", "sniper3", "testTarget2")
 
@@ -93,4 +115,4 @@ module.exports = {
 	getGuildHuntedData,
 }
 
-// getGuildHuntedData("973383546825740298")
+// getSniperData("973383546825740298", {id: "280538761710796800"})
