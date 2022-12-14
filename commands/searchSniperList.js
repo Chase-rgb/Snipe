@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require('@discordjs/builders');
 const { SlashCommandBuilder } = require('discord.js');
-const { getGuildHuntedData } = require('../helper/firebase.js')
+const { getSniperData } = require('../helper/firebase.js')
 
 
 const data = new SlashCommandBuilder()
@@ -18,7 +18,7 @@ async function execute(interaction) {
         .setThumbnail(`https://cdn-icons-png.flaticon.com/512/473/473409.png`)
         .setColor(0xa30000)
         .setTimestamp()
-        .setDescription(await getGuildHuntedData(guildID))    
+        .setDescription(await getSniperData(guildID, sniperID))    
 
     const message = await interaction.reply({
         embeds: [embedMessage]

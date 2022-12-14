@@ -97,7 +97,8 @@ async function getSniperData(guildID, sniperID) {
 		sniperDataString = ""
 		let i = 1
 		snapshot.forEach(async (doc) => {
-			sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("timeHunted")}*** \n`
+			console.log(doc);
+			sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("timesHunted")}*** \n`
 			i++
 		})
 		// console.log(sniperDataString)
@@ -113,6 +114,7 @@ module.exports = {
 	addSnipe, 
 	getGuildSniperData,
 	getGuildHuntedData,
+	getSniperData
 }
 
 // getSniperData("973383546825740298", {id: "280538761710796800"})
