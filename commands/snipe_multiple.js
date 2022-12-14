@@ -43,7 +43,7 @@ async function execute(interaction) {
     }
     targetID = [...new Set(targetID)];
     const message = await interaction.reply({
-        content: `${buildTargetString(targetID)} just got sniped by ${sniperID}`,
+        content: `${buildTargetString(targetID)} just got sniped by ${sniperID}. (If you're a target, please confirm the snipe by reacting)`,
         files: [image],
         fetchReply: true
     });

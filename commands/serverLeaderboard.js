@@ -2,8 +2,6 @@ const { EmbedBuilder } = require('@discordjs/builders');
 const { SlashCommandBuilder } = require('discord.js');
 const { getGuildSniperData } = require('../helper/firebase.js')
 
-
-
 const data = new SlashCommandBuilder()
     .setName('sniper_leaderboard')
     .setDescription('See who the top snipers are!')

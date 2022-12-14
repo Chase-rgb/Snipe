@@ -2,7 +2,6 @@ const { EmbedBuilder } = require('@discordjs/builders');
 const { SlashCommandBuilder } = require('discord.js');
 const { getSniperData } = require('../helper/firebase.js')
 
-
 const data = new SlashCommandBuilder()
     .setName('search_snipe_list')
     .setDescription('See the snipe list of someone else!')
