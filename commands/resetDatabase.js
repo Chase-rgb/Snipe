@@ -5,7 +5,7 @@ const data = new SlashCommandBuilder()
 	.setName('reset_database')
 	.setDescription("[Owner Only Command] This command will completely reset the database")
 
-execute = async(interaction) => {
+async function execute(interaction) {
     let currUser = interaction.user
     let ownerId = interaction.member.guild.ownerId
     let message

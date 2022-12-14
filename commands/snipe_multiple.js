@@ -16,7 +16,7 @@ for (let i = 1; i < numTargets; i++){
     data.addUserOption(option => option.setName(`target${i+1}`).setDescription("Target"))
 }
 
-execute = async(interaction) => {
+async function execute(interaction) {
     let sniperID = interaction.user
     let targetID = []
     let image = interaction.options.getAttachment("image")
