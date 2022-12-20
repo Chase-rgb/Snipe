@@ -1,5 +1,5 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const { getFirestore, Timestamp, FieldValue, runTransaction } = require('firebase-admin/firestore');
 const client = require('firebase-tools');
 
 const serviceAccount = require('../ServiceAccountKey.json');
@@ -13,7 +13,8 @@ const db = getFirestore();
 async function testDB() {
 	try {
 		// const snapshot = await db.collection('guilds').get();
-		const sniperHitlistRef = await db.collection("guilds").doc("973383546825740298").collection("sniperKillList").doc("sniperId").get()
+		const sniperInfo = await (await db.collection("guilds").doc("973383546825740298").collection("sniperInfo").doc("123545").get()).get("snipeHistory")
+		console.log(sniperInfo);
 	} catch (error) {
 		console.log("Error in getting database guilds", error)
 	}
@@ -27,33 +28,28 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 		const guildRef = db.collection("guilds").doc(guildID)
 		const sniperInfoRef = guildRef.collection("sniperInfo").doc(sniperID.id)
 		const sniperSnipedListRef = sniperInfoRef.collection("snipedList")
-		targetIDs.forEach((targetUser) => {
+		const sniperSnipeHistoryRef = sniperInfoRef.collection("snipeHistory").doc()
+		targetIDs.forEach(async (targetUser) => {
 			const huntedRef = guildRef.collection("huntedInfo").doc(targetUser.id)
+			const huntedHistoryRef = huntedRef.collection("huntedHistory").doc()
 			const sniperHuntedRef = sniperSnipedListRef.doc(targetUser.id)
 
 			//Increment hunted document
-			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1)}, {merge: true})
-
-			//Add hunted name to sniper document
-			batch.set(sniperHuntedRef, {"username": targetUser.username}, {merge: true})
+			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1), "username": targetUser.username}, {merge: true})
 
 			//Increment total sniped count
-			batch.set(sniperInfoRef, {"totalSnipes": FieldValue.increment(1)}, {merge: true})
-
-			//Add sniper name to the database
-			batch.set(sniperInfoRef, {"username": sniperID.username}, {merge: true})
+			batch.set(sniperInfoRef, {"totalSnipes": FieldValue.increment(1), "username": sniperID.username, "lastSnipedTimestamp": Timestamp.now()}, {merge: true})
 
 			//Increment hunted death count
-			batch.set(huntedRef, {"timesHunted": FieldValue.increment(1)}, {merge: true})
-
-			//Add hunted name to the database
-			batch.set(huntedRef, {"username": targetUser.username}, {merge: true})
+			batch.set(huntedRef, {"timesHunted": FieldValue.increment(1), "username": targetUser.username, "lastHuntedTimestamp": Timestamp.now()}, {merge: true})
 			
+			//Add to sniper and hunted histories
+			batch.set(sniperSnipeHistoryRef, {"targetUser": targetUser.username, "timestamp": Timestamp.now()})
+			batch.set(huntedHistoryRef, {"sniperUser": sniperID.username, "timestamp": Timestamp.now()})
+
 		})
 		await batch.commit().then(console.log("Database successful updated"));
 		return true
-
-		// console.log(await (await guildRef.get()).data()[sniperID]);
 	} catch (error) {
 		console.log("Error in adding snipe to database", error);
 		return false
@@ -76,7 +72,7 @@ async function getGuildSniperData(guildID) {
 
 async function getGuildHuntedData(guildID) {
 	const huntedInfo = db.collection("guilds").doc(guildID).collection("huntedInfo");
-	const snapshot = await huntedInfo.orderBy("timesHunted", "desc").orderBy("username").get()
+	const snapshot = await huntedInfo.orderBy("timesHunted", "desc").orderBy("timestamp").get()
 	huntedDataString = ""
 	let i = 1
 	snapshot.forEach(async (doc) => {
@@ -94,7 +90,7 @@ async function getSniperData(guildID, sniperID) {
 		return ""
 	} else {
 		const sniperHitlistRef = sniperInfoRef.collection("snipedList")
-		const snapshot = await sniperHitlistRef.orderBy("timesHunted", "desc").orderBy("username").get()
+		const snapshot = await sniperHitlistRef.orderBy("timesHunted", "desc").orderBy("timestamp").get()
 		sniperDataString = ""
 		let i = 1
 		snapshot.forEach(async (doc) => {
@@ -130,4 +126,4 @@ module.exports = {
 	deleteServerSnipeData
 }
 
-// getSniperData("973383546825740298", {id: "280538761710796800"})
+// testDB()
