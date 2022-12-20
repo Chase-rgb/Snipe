@@ -94,7 +94,7 @@ async function getSniperData(guildID, sniperID) {
 		sniperDataString = ""
 		let i = 1
 		snapshot.forEach(async (doc) => {
-			console.log(doc);
+			// console.log(doc);
 			sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("timesHunted")}*** \n`
 			i++
 		})

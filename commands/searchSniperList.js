@@ -11,7 +11,7 @@ async function execute(interaction) {
     let guildID = interaction.guildId
     let sniperID = interaction.options.getUser('sniper');
 
-    console.log(sniperID);
+    // console.log(sniperID);
 
     const embedMessage = new EmbedBuilder()
         .setTitle(`${sniperID.username}'s Hunted Leaderboard`)
