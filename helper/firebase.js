@@ -13,7 +13,7 @@ const db = getFirestore();
 async function testDB() {
 	try {
 		// const snapshot = await db.collection('guilds').get();
-		const sniperInfo = await (await db.collection("guilds").doc("973383546825740298").collection("sniperInfo").doc("123545").get()).get("snipeHistory")
+		const sniperInfo =  (await db.collection("guilds").doc("973383546825740298").collection("sniperInfo").doc("975519587804274700").get()).get("username")
 		console.log(sniperInfo);
 	} catch (error) {
 		console.log("Error in getting database guilds", error)
@@ -35,7 +35,7 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 			const sniperHuntedRef = sniperSnipedListRef.doc(targetUser.id)
 
 			//Increment hunted document
-			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1), "username": targetUser.username}, {merge: true})
+			batch.set(sniperHuntedRef, {"timesHunted": FieldValue.increment(1), "username": targetUser.username, "lastHuntedTimestamp": Timestamp.now()}, {merge: true})
 
 			//Increment total sniped count
 			batch.set(sniperInfoRef, {"totalSnipes": FieldValue.increment(1), "username": sniperID.username, "lastSnipedTimestamp": Timestamp.now()}, {merge: true})
@@ -58,11 +58,13 @@ async function addSnipe(guildID, sniperID, targetIDs) {
 
 async function getGuildSniperData(guildID) {
 	const sniperInfo = db.collection("guilds").doc(guildID).collection("sniperInfo");
-	const snapshot = await sniperInfo.orderBy("totalSnipes", "desc").orderBy("timestamp").get()
+	const snapshot = await sniperInfo.orderBy("totalSnipes", "desc").orderBy("lastSnipedTimestamp", "desc").get()
+	// console.log(snapshot.size);
 	sniperDataString = ""
 	let i = 1
 	snapshot.forEach(async (doc) => {
 		sniperDataString += `${i}) ${doc.get("username")} => ***${doc.get("totalSnipes")}*** \n`
+		// console.log(sniperDataString);
 		i++
 	})
 	// console.log(sniperDataString)
@@ -72,7 +74,7 @@ async function getGuildSniperData(guildID) {
 
 async function getGuildHuntedData(guildID) {
 	const huntedInfo = db.collection("guilds").doc(guildID).collection("huntedInfo");
-	const snapshot = await huntedInfo.orderBy("timesHunted", "desc").orderBy("timestamp").get()
+	const snapshot = await huntedInfo.orderBy("timesHunted", "desc").orderBy("lastHuntedTimestamp", "desc").get()
 	huntedDataString = ""
 	let i = 1
 	snapshot.forEach(async (doc) => {
@@ -90,7 +92,7 @@ async function getSniperData(guildID, sniperID) {
 		return "No sniper data available"
 	} else {
 		const sniperHitlistRef = sniperInfoRef.collection("snipedList")
-		const snapshot = await sniperHitlistRef.orderBy("timesHunted", "desc").orderBy("timestamp").get()
+		const snapshot = await sniperHitlistRef.orderBy("timesHunted", "desc").orderBy("lastHuntedTimestamp", "desc").get()
 		sniperDataString = ""
 		let i = 1
 		snapshot.forEach(async (doc) => {
