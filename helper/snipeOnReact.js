@@ -22,14 +22,14 @@ function snipeOnReact(message, sniperId, ...targets) {
         snipedUsers = collected.get('🟩')
         //Makes sure that a target has reacted
         snipedUsers = snipedUsers == undefined ? [] : Array.from(collected.get('🟩')?.users.cache.values()).filter(user => targets.includes(user))
-        // console.log(snipedUsers);
+        console.log(`Sniped users: ${snipedUsers}`);
 
         missedUsers = collected.get('🟥')
         missedUsers = missedUsers == undefined ? [] : Array.from(collected.get('🟥')?.users.cache.values()).filter(user => targets.includes(user))
-        // console.log(missedUsers);
+        console.log(`Missed users: ${missedUsers}`);
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
-        // console.log(successfulSnipedUsers);
+        console.log(`Successfully sniped users: ${successfulSnipedUsers}`);
         message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
 
         //Check to see if there were any successful snipes
