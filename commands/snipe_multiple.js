@@ -42,11 +42,14 @@ async function execute(interaction) {
             
         }  
     } catch (error) {
-        
         console.log(error)
+        return
     }
     targetID = [...new Set(targetID)];
-    const message = await interaction.reply({
+    
+    // Need to defer reply to wait for image to load if it's greater than 8mb
+    await interaction.deferReply()
+    const message = await interaction.editReply({
         content: `${buildTargetString(targetID)} just got sniped by ${sniperID}. (If you're a target, please confirm the snipe by reacting)`,
         files: [image],
         fetchReply: true
@@ -54,5 +57,6 @@ async function execute(interaction) {
 
     snipeOnReact(message, sniperID, ...targetID)
 }
+
 
 module.exports = {data, execute}

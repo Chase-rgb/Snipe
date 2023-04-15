@@ -1,5 +1,5 @@
 const { addSnipe } = require('../helper/firebase')
-const { buildTargetUserString } = require('../helper/stringHelper.js')
+const { buildTargetUserString, buildTargetString } = require('../helper/stringHelper.js')
 
 function snipeOnReact(message, sniperId, ...targets) {
     message.react('🟩')
@@ -14,7 +14,7 @@ function snipeOnReact(message, sniperId, ...targets) {
     const collector = message.createReactionCollector({ filter, time: 1000 * 86400, dispose: true, maxUsers: targets.length})
 
     //Debug message
-    console.log(`${buildTargetString(targetID)} have just been sniped. Pending acceptance`)
+    console.log(`${buildTargetUserString(targets)} have just been sniped. Pending acceptance`)
 
     collector.on("collect", (reaction, user) => {
         console.log(`Collected ${user.tag}`);
@@ -25,14 +25,14 @@ function snipeOnReact(message, sniperId, ...targets) {
         snipedUsers = collected.get('🟩')
         //Makes sure that a target has reacted
         snipedUsers = snipedUsers == undefined ? [] : Array.from(collected.get('🟩')?.users.cache.values()).filter(user => targets.includes(user))
-        console.log(`Sniped users: ${snipedUsers}`);
+        // console.log(snipedUsers);
 
         missedUsers = collected.get('🟥')
         missedUsers = missedUsers == undefined ? [] : Array.from(collected.get('🟥')?.users.cache.values()).filter(user => targets.includes(user))
-        console.log(`Missed users: ${missedUsers}`);
+        // console.log(missedUsers);
 
         successfulSnipedUsers = snipedUsers.filter(user => !missedUsers.includes(user))
-        console.log(`Successfully sniped users: ${successfulSnipedUsers}`);
+        // console.log(successfulSnipedUsers);
         message.reactions.removeAll().catch(error => console.error("Failed to clear reactions" , error))
 
         //Check to see if there were any successful snipes
