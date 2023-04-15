@@ -6,7 +6,6 @@ function snipeOnReact(message, sniperId, ...targets) {
     message.react('🟥')
 
     //Filter so that the Reaction Collector knows what to look for
-
     const filter = (reaction, user) => {
         return (reaction.emoji.name == '🟩' || reaction.emoji.name == '🟥') && targets.includes(user)
     }
@@ -14,9 +13,13 @@ function snipeOnReact(message, sniperId, ...targets) {
     //Set up collector to expire in 1 day
     const collector = message.createReactionCollector({ filter, time: 1000 * 86400, dispose: true, maxUsers: targets.length})
 
+    //Debug message
+    console.log(`${buildTargetString(targetID)} have just been sniped. Pending acceptance`)
+
     collector.on("collect", (reaction, user) => {
         console.log(`Collected ${user.tag}`);
     })
+
 
     collector.on("end", async (collected) => {
         snipedUsers = collected.get('🟩')

@@ -32,13 +32,17 @@ async function execute(interaction) {
                 interaction.reply({content: "Unfortunately, you can't snipe the bot ;-;", ephemeral: true})
                 return 
             }
+
+            // Don't allow users to snipe themselves
             if (user.id == sniperID.id) {
                 interaction.reply({content: "Sniping yourself sounds like a bad time ;-;", ephemeral: true})
                 return
             }
             targetID.push(user)
+            
         }  
     } catch (error) {
+        
         console.log(error)
     }
     targetID = [...new Set(targetID)];

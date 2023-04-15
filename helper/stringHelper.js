@@ -13,6 +13,7 @@ function buildTargetString(targets) {
     }
 }
 
+// When given a list of names, prints out names in listing format: (John, Alex, and Jack)
 function buildTargetUserString(targets) {
     try {
         if (targets.length == 1) {
